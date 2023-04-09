@@ -7,14 +7,14 @@ const {
 } = require('../helpers/fsUtils');
 
 // GET route for reading the currently stored notes
-notes.get('/api/notes', (req, res) => {
+notes.get('/notes', (req, res) => {
     readFromFile('./db/db.json').then((data) => {
       res.json(JSON.parse(data))
     });
   });
 
 // POST route for new note
-notes.post('/api/notes', (req, res) => {
+notes.post('/notes', (req, res) => {
     console.log(req.body);
   
     const { title, text } = req.body;
@@ -26,12 +26,26 @@ notes.post('/api/notes', (req, res) => {
       const newNote = {
         title,
         text,
-        note_id: uuidv4(),
+        id: uuidv4(),
       };
   
       readAndAppend(newNote, './db/db.json');
       res.json(`Note added successfully! 🚀`);
     }
+  });
+
+notes.delete('/notes/:id', (req, res) => {
+    const id = req.params.id;
+    readFromFile('./db/db.json')
+      .then((data) => JSON.parse(data))
+      .then((json) => {
+        
+        const result = json.filter((notes) => notes.id !== id);
+  
+        writeToFile('./db/db.json', result);
+  
+        res.json(`Item ${id} has been deleted 🗑️`);
+      });
   });
 
   module.exports = notes;
