@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const api = require('./routes/notes');
+const { clog } = require('./middleware/clog');
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -19,12 +21,12 @@ app.use(express.static('public'));
 
 // GET Route for notes page
 app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, './develop/public/notes.html'))
+  res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
 // GET Route for */index.html (wildcard)
 app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, './develop/public/index.html'))
+  res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
 app.listen(PORT, () =>
